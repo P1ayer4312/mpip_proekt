@@ -1,4 +1,4 @@
-package com.example.proekt_mpip_181190
+package com.example.proekt_mpip_181190.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,6 +7,9 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.proekt_mpip_181190.adapters.FeedRecyclerViewAdapter
+import com.example.proekt_mpip_181190.R
+import com.example.proekt_mpip_181190.models.RecipeCardData
 
 class FeedActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +87,7 @@ class FeedActivity : AppCompatActivity() {
         }
 
         val recyclerView: RecyclerView = findViewById(R.id.feed_recyclerView)
-        recyclerView.adapter = MyAdapter(recipes.toList())
+        recyclerView.adapter = FeedRecyclerViewAdapter(recipes.toList())
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
 }

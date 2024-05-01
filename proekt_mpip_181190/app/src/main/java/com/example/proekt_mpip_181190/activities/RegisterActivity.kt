@@ -1,4 +1,4 @@
-package com.example.proekt_mpip_181190
+package com.example.proekt_mpip_181190.activities
 
 import android.os.Bundle
 import android.widget.Button
@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.proekt_mpip_181190.R
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var usernameField: EditText;

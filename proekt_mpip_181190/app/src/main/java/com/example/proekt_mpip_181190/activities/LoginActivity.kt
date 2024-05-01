@@ -1,10 +1,7 @@
-package com.example.proekt_mpip_181190
+package com.example.proekt_mpip_181190.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -12,7 +9,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import java.lang.reflect.Field
+import com.example.proekt_mpip_181190.R
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var loginButton: Button;

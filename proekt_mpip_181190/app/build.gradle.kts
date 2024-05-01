@@ -46,5 +46,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // External Dependencies
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0") // Load images from URL
+    implementation("jp.wasabeef:richeditor-android:2.0.0")
 }
