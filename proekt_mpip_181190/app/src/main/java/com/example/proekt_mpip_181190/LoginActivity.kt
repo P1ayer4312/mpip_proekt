@@ -1,6 +1,7 @@
 package com.example.proekt_mpip_181190
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.View
@@ -30,6 +31,9 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        // Intent
+        val feedActivity = Intent(this, FeedActivity::class.java)
+
         // Find elements
         this.loginButton = findViewById(R.id.login_loginButton)
         this.backButton = findViewById(R.id.login_backButton)
@@ -38,8 +42,11 @@ class LoginActivity : AppCompatActivity() {
         this.invalidCredentialsText = findViewById(R.id.login_invalidCredentialsErrorText)
 
         // Events
-        this.backButton.setOnClickListener{
+        this.backButton.setOnClickListener {
             finish()
+        }
+        this.loginButton.setOnClickListener {
+            startActivity(feedActivity)
         }
     }
 

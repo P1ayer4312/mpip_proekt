@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         // Intents
         val loginIntent = Intent(this, LoginActivity::class.java)
         val registerIntent = Intent(this, RegisterActivity::class.java)
+        val feedActivity = Intent(this, FeedActivity::class.java) //TODO: REMOVE
 
         // Find elements
         this.loginButton = findViewById(R.id.main_loginButton);
@@ -23,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         // Events
         this.loginButton.setOnClickListener {
-            startActivity(loginIntent)
+            startActivity(feedActivity)
         }
         this.registerButton.setOnClickListener {
             startActivity(registerIntent)
