@@ -18,8 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
+        
         // Intents
         val loginIntent = Intent(this, LoginActivity::class.java)
         val registerIntent = Intent(this, RegisterActivity::class.java)
@@ -31,8 +30,14 @@ class MainActivity : AppCompatActivity() {
         this.registerButton = findViewById(R.id.main_registerButton)
 
         this.testStuff = findViewById(R.id.testStuff)
-        testStuff.loadUrl("file:///android_asset/test.html")
-
+//        testStuff.loadUrl("file:///android_asset/test.html")
+//        testStuff.settings.javaScriptEnabled = true
+        // Load html data
+        testStuff.loadData(
+            """
+            <h1>hello</h1>
+            """.trimIndent(), "text/html; charset=UTF-8", null
+        )
 
         // Events
         this.loginButton.setOnClickListener {
