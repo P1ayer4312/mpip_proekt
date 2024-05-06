@@ -155,7 +155,28 @@
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="12dp" />
     <!-- Editor -->
 
+    <!-- Cancel and Save buttons -->
+    <LinearLayout
+        android:id="@+id/createRecipe_cancelSaveContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/createRecipe_cancel"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/createRecipe_save"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+    </LinearLayout>
+    <!-- Cancel and Save buttons -->
 </LinearLayout>

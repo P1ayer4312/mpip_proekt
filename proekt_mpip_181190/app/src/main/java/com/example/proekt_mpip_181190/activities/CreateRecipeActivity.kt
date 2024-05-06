@@ -1,10 +1,11 @@
 package com.example.proekt_mpip_181190.activities
 
-import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,6 +31,8 @@ class CreateRecipeActivity : AppCompatActivity() {
 
         // Configure editor
         configureEditorAndEvents(mEditor)
+        configureKeyboardResizeHandler()
+
     }
 
     private fun configureEditorAndEvents(mEditor: RichEditor) {
@@ -65,6 +68,30 @@ class CreateRecipeActivity : AppCompatActivity() {
                 "https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg",
                 "dachshund", 320
             )
+        }
+    }
+
+    private fun configureKeyboardResizeHandler() {
+        val contentView = findViewById<View>(android.R.id.content)
+        contentView.getViewTreeObserver().addOnGlobalLayoutListener {
+            val r = Rect()
+            contentView.getWindowVisibleDisplayFrame(r)
+            val screenHeight = contentView.getRootView().height
+            val keypadHeight = screenHeight - r.bottom
+            val webView: RichEditor = findViewById(R.id.editor)
+            val cancelSaveContainer: LinearLayout =
+                findViewById(R.id.createRecipe_cancelSaveContainer)
+            if (keypadHeight > screenHeight * 0.15) { // Keyboard is shown
+                // Reduce the WebView's height or adjust layout parameters here
+                webView.layoutParams.height =
+                    (screenHeight - keypadHeight - Math.round(keypadHeight / 3.0)).toInt()
+            } else {
+                // Reset WebView's height or layout parameters when keyboard is hidden
+//                webView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+                webView.layoutParams.height = (screenHeight / 1.5).toInt()
+            }
+            Log.d("a", cancelSaveContainer.measuredHeight.toString())
+            webView.requestLayout()
         }
     }
 }
