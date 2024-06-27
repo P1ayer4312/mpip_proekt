@@ -5,17 +5,24 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.proekt_mpip_181190.R
+import com.example.proekt_mpip_181190.models.RecipeData
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import jp.wasabeef.richeditor.RichEditor
-
 
 class CreateRecipeActivity : AppCompatActivity() {
     private lateinit var mEditor: RichEditor
+    private lateinit var cancelButton: Button
+    private lateinit var saveButton: Button
+    private lateinit var db: FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,8 +33,20 @@ class CreateRecipeActivity : AppCompatActivity() {
             insets
         }
 
+        this.db = Firebase.firestore
+
         // Get elements
         this.mEditor = findViewById(R.id.editor)
+        this.cancelButton = findViewById(R.id.createRecipe_cancel)
+        this.saveButton = findViewById(R.id.createRecipe_save)
+
+        // Events
+        this.cancelButton.setOnClickListener {
+            finish()
+        }
+        this.saveButton.setOnClickListener {
+            saveRecipeToFirestore(mEditor)
+        }
 
         // Configure editor
         configureEditorAndEvents(mEditor)
@@ -40,13 +59,6 @@ class CreateRecipeActivity : AppCompatActivity() {
         mEditor.setEditorFontSize(22);
         mEditor.setPadding(10, 10, 10, 10);
         mEditor.setPlaceholder("Insert text here...");
-
-        mEditor.setOnTextChangeListener { text ->
-            run {
-                Log.d("DEBUG", text)
-//                mPreview.text = text
-            }
-        }
 
         findViewById<View>(R.id.action_undo).setOnClickListener { mEditor.undo() }
         findViewById<View>(R.id.action_redo).setOnClickListener { mEditor.redo() }
@@ -64,6 +76,7 @@ class CreateRecipeActivity : AppCompatActivity() {
         findViewById<View>(R.id.action_insert_bullets).setOnClickListener { mEditor.setBullets() }
         findViewById<View>(R.id.action_insert_numbers).setOnClickListener { mEditor.setNumbers() }
         findViewById<View>(R.id.action_insert_image).setOnClickListener {
+            //TODO: Implement image picker
             mEditor.insertImage(
                 "https://raw.githubusercontent.com/wasabeef/art/master/chip.jpg",
                 "dachshund", 320
@@ -90,8 +103,28 @@ class CreateRecipeActivity : AppCompatActivity() {
 //                webView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
                 webView.layoutParams.height = (screenHeight / 1.5).toInt()
             }
-            Log.d("a", cancelSaveContainer.measuredHeight.toString())
+
             webView.requestLayout()
         }
+    }
+
+    private fun saveRecipeToFirestore(mEditor: RichEditor) {
+
+        val recipe = RecipeData(
+            title = "Submit from da phone?? :OO",
+            author = "Blazho",
+            imageLink = "link?",
+            recipeData = mEditor.html
+        )
+
+        this.db.collection("recipes")
+            .add(recipe)
+            .addOnSuccessListener { docReference ->
+                Log.d("STORE", "Save id: ${docReference.id}")
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Log.w("ERROR", e)
+            }
     }
 }
