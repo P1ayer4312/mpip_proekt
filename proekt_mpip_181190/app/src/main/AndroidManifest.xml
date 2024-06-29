@@ -14,7 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Proekt_mpip_181190"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.SearchFieldActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.DisplayRecipeActivity"
             android:exported="false" />

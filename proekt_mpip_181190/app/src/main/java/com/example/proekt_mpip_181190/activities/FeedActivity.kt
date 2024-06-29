@@ -54,10 +54,22 @@ class FeedActivity : AppCompatActivity(), FeedRecyclerViewAdapter.RecyclerViewEv
             override fun onTabUnselected(tab: TabLayout.Tab) {}
         })
 
+        val searchTerm = intent.getStringExtra("SEARCH_TERM")
+
         // Fetch and map Firebase data
         this.db.collection("recipes").get()
             .addOnSuccessListener { result: QuerySnapshot ->
-                result.toList().forEach { res ->
+                for (res in result.toList()) {
+                    val title = res.data["title"] as String;
+
+                    if (searchTerm != null &&
+                        !title.lowercase().contains(searchTerm.lowercase())
+                    ) {
+                        // Skip item if search term is provided and the current item title
+                        // doesn't contain the search term
+                        continue
+                    }
+
                     recipeFirestoreItems.add(
                         RecipeData(
                             res.data["title"] as String,
@@ -72,6 +84,7 @@ class FeedActivity : AppCompatActivity(), FeedRecyclerViewAdapter.RecyclerViewEv
 
                 // Map data for cards
                 val recipes = arrayListOf<RecipeCardData>()
+
                 for (item in recipeFirestoreItems) {
                     recipes.add(
                         RecipeCardData(
@@ -98,12 +111,6 @@ class FeedActivity : AppCompatActivity(), FeedRecyclerViewAdapter.RecyclerViewEv
         val displayRecipeActivity = Intent(this, DisplayRecipeActivity::class.java)
         displayRecipeActivity.putExtra("DOCUMENT_ID", data.documentId)
         startActivity(displayRecipeActivity)
-
-//        Toast.makeText(
-//            this,
-//            data.documentId,
-//            Toast.LENGTH_LONG
-//        ).show()
     }
 
     private fun handleTabSelection(tabPosition: Int) {
@@ -116,7 +123,8 @@ class FeedActivity : AppCompatActivity(), FeedRecyclerViewAdapter.RecyclerViewEv
             }
 
             1 -> {
-                // Handle second tab selected
+                val searchFieldActivity = Intent(this, SearchFieldActivity::class.java)
+                startActivity(searchFieldActivity)
             }
         }
     }

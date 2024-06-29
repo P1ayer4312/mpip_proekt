@@ -26,6 +26,7 @@ class CreateRecipeTitleImageActivity : AppCompatActivity() {
     private lateinit var nextButton: Button
     private lateinit var backButton: Button
     private lateinit var title: EditText
+    private lateinit var authorNameField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +42,7 @@ class CreateRecipeTitleImageActivity : AppCompatActivity() {
         this.nextButton = findViewById(R.id.createRecipeTitleImage_nextButton)
         this.backButton = findViewById(R.id.createRecipeTitleImage_backButton)
         this.title = findViewById(R.id.createRecipeTitleImage_titleField)
+        this.authorNameField = findViewById(R.id.createRecipeTitleImage_authorNameField)
 
         this.backButton.setOnClickListener {
             finish()
@@ -50,8 +52,11 @@ class CreateRecipeTitleImageActivity : AppCompatActivity() {
         this.nextButton.setOnClickListener {
             val thumbnailUrl = this.thumbnailUri.toString();
             val title = this.title.text.toString();
+            val authorName = this.authorNameField.text.toString()
             createRecipeActivity.putExtra("THUMBNAIL_URI", thumbnailUrl)
             createRecipeActivity.putExtra("RECIPE_TITLE", title)
+            createRecipeActivity.putExtra("AUTHOR_NAME", authorName)
+
             startActivity(createRecipeActivity)
         }
 
@@ -68,24 +73,4 @@ class CreateRecipeTitleImageActivity : AppCompatActivity() {
             )
         }
     }
-
-    private fun convertImageUriToBase64DataUrl(uri: Uri): String {
-        val contentResolver: ContentResolver = contentResolver
-        val inputStream: InputStream? = contentResolver.openInputStream(uri)
-        val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
-        val base64String: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-
-        // Get MIME type from URI
-        val mimeType: String? = contentResolver.getType(uri)
-
-        return if (mimeType != null) {
-            "data:$mimeType;base64,$base64String"
-        } else {
-            ""
-        }
-    }
-
 }

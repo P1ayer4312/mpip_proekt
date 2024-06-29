@@ -1,6 +1,7 @@
 package com.example.proekt_mpip_181190.activities
 
 import android.content.ContentResolver
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Rect
@@ -9,9 +10,9 @@ import android.os.Bundle
 import android.util.Base64
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,11 +25,12 @@ import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask.TaskSnapshot
 import com.google.firebase.storage.storage
 import jp.wasabeef.richeditor.RichEditor
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.InputStream
+import java.util.UUID
 
 class CreateRecipeActivity : AppCompatActivity() {
     private lateinit var mEditor: RichEditor
@@ -36,6 +38,8 @@ class CreateRecipeActivity : AppCompatActivity() {
     private lateinit var saveButton: Button
     private lateinit var db: FirebaseFirestore
     private lateinit var dbStorage: FirebaseStorage
+    private lateinit var thumbnailUrlFirebase: String
+    private lateinit var authorName: String
 
     private lateinit var thumbnailUriString: String
     private lateinit var recipeTitle: String
@@ -54,21 +58,20 @@ class CreateRecipeActivity : AppCompatActivity() {
 
         this.recipeTitle = intent.getStringExtra("RECIPE_TITLE")!!
         this.thumbnailUriString = intent.getStringExtra("THUMBNAIL_URI")!!
-
+        this.authorName = intent.getStringExtra("AUTHOR_NAME")!!
 
         val file = Uri.parse(this.thumbnailUriString)
-        val riversRef = this.dbStorage.reference.child("images/${file.lastPathSegment}")
-        val uploadTask = riversRef.putFile(file)
+        val thumbnailImgUUID = UUID.randomUUID().toString()
+        val fileRef = this.dbStorage.reference.child("images/${thumbnailImgUUID}")
+        val uploadTask = fileRef.putFile(file)
 
-        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener {
-            // Handle unsuccessful uploads
-        }.addOnSuccessListener { taskSnapshot ->
-            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            taskSnapshot.storage.path
-            Log.w("URL", taskSnapshot.metadata?.path.toString())
+            Log.w("ERROR", "Unable to upload file")
+        }.addOnSuccessListener {
+            fileRef.downloadUrl.addOnSuccessListener {
+                this.thumbnailUrlFirebase = it.toString()
+            }
         }
-
 
         // Get elements
         this.mEditor = findViewById(R.id.editor)
@@ -97,9 +100,23 @@ class CreateRecipeActivity : AppCompatActivity() {
         val imagePicker =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
                 if (uri != null) {
-                    val img = convertImageUriToBase64DataUrl(uri);
-                    mEditor.html += "<img src=\"${img}\" width=300>"
+                    val thumbnailImgUUID = UUID.randomUUID().toString()
+                    val fileRef = this.dbStorage.reference.child("images/${thumbnailImgUUID}")
+                    val uploadTask = fileRef.putFile(uri)
+
+                    uploadTask.addOnFailureListener {
+                        Log.w("ERROR", "Unable to upload file")
+                    }.addOnSuccessListener {
+                        fileRef.downloadUrl.addOnSuccessListener {
+
+                            mEditor.insertImage(
+                                it.toString(),
+                                "", 320
+                            )
+                        }
+                    }
                 }
+
             }
 
         findViewById<View>(R.id.action_undo).setOnClickListener { mEditor.undo() }
@@ -148,43 +165,30 @@ class CreateRecipeActivity : AppCompatActivity() {
     }
 
     private fun saveRecipeToFirestore(mEditor: RichEditor) {
-        val thumbnailToBase64 = convertImageUriToBase64DataUrl(Uri.parse(this.thumbnailUriString))
         val recipe = RecipeData(
             title = this.recipeTitle,
-            author = "Blazho",
-            imageLink = "link?",
+            author = this.authorName,
+            imageLink = "",
             recipeData = mEditor.html,
-            thumbnail = thumbnailToBase64,
+            thumbnail = this.thumbnailUrlFirebase,
             documentId = ""
         )
+
+        Toast.makeText(
+            this,
+            "Saving recipe...",
+            Toast.LENGTH_LONG
+        ).show()
 
         this.db.collection("recipes")
             .add(recipe)
             .addOnSuccessListener { docReference ->
                 Log.d("STORE", "Save id: ${docReference.id}")
-                finish()
+                val feedActivity = Intent(this, FeedActivity::class.java)
+                startActivity(feedActivity)
             }
             .addOnFailureListener { e ->
                 Log.w("ERROR", e)
             }
-    }
-
-    private fun convertImageUriToBase64DataUrl(uri: Uri): String {
-        val contentResolver: ContentResolver = contentResolver
-        val inputStream: InputStream? = contentResolver.openInputStream(uri)
-        val bitmap: Bitmap = BitmapFactory.decodeStream(inputStream)
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val byteArray: ByteArray = byteArrayOutputStream.toByteArray()
-        val base64String: String = Base64.encodeToString(byteArray, Base64.DEFAULT)
-
-        // Get MIME type from URI
-        val mimeType: String? = contentResolver.getType(uri)
-
-        return if (mimeType != null) {
-            "data:$mimeType;base64,$base64String"
-        } else {
-            ""
-        }
     }
 }

@@ -51,8 +51,6 @@ class FeedRecyclerViewAdapter(
         Glide.with(holder.itemView)
             .load(recipeCardData.imageLink)
             .into(holder.thumbnail)
-
-
     }
 
     interface RecyclerViewEvent {
