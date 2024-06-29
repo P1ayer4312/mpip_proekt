@@ -23,14 +23,13 @@
         android:id="@+id/createRecipeTitleImage_nextButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="208dp"
         android:text="Next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_invalidCredentialsErrorText"
-        app:layout_constraintVertical_bias="0.139" />
+        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_imageButton" />
 
     <Button
         android:id="@+id/createRecipeTitleImage_backButton"
@@ -58,19 +57,6 @@
         app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_headerText"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/createRecipeTitleImage_passwordField"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:ems="10"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_titleField"
-        app:layout_constraintVertical_bias="0.039" />
-
     <TextView
         android:id="@+id/createRecipeTitleImage_titleFieldLabel"
         android:layout_width="wrap_content"
@@ -88,24 +74,25 @@
         android:id="@+id/createRecipeTitleImage_passwordFieldLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"
-        app:layout_constraintBottom_toTopOf="@+id/createRecipeTitleImage_passwordField"
+        android:layout_marginTop="32dp"
+        android:text="Choose thumbnail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.088"
+        app:layout_constraintHorizontal_bias="0.104"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_titleField"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_titleField" />
 
-    <TextView
-        android:id="@+id/createRecipeTitleImage_invalidCredentialsErrorText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Invalid credentials"
+    <ImageButton
+        android:id="@+id/createRecipeTitleImage_imageButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.108"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_passwordField"
-        app:layout_constraintVertical_bias="0.094" />
+        app:layout_constraintTop_toBottomOf="@+id/createRecipeTitleImage_passwordFieldLabel"
+        app:layout_constraintVertical_bias="0.0"
+        tools:srcCompat="@tools:sample/avatars" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

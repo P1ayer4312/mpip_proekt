@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.proekt_mpip_181190.activities.CreateRecipeActivity
 import com.example.proekt_mpip_181190.activities.CreateRecipeTitleImageActivity
+import com.example.proekt_mpip_181190.activities.DisplayRecipeActivity
 import com.example.proekt_mpip_181190.activities.FeedActivity
 import com.example.proekt_mpip_181190.activities.LoginActivity
 import com.example.proekt_mpip_181190.activities.RegisterActivity
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         val loginIntent = Intent(this, LoginActivity::class.java)
         val registerIntent = Intent(this, RegisterActivity::class.java)
         val feedActivity = Intent(this, FeedActivity::class.java) //TODO: REMOVE
+        val displayRecipeActivity = Intent(this, DisplayRecipeActivity::class.java) //TODO: REMOVE
         val createRecipeTitleImageActivity =
             Intent(this, CreateRecipeTitleImageActivity::class.java)
         val createRecipeActivity = Intent(this, CreateRecipeActivity::class.java)
@@ -49,9 +51,10 @@ class MainActivity : AppCompatActivity() {
             """.trimIndent(), "text/html; charset=UTF-8", null
         )
 
+
         // Events
         this.loginButton.setOnClickListener {
-            startActivity(feedActivity) //TODO: Return login
+            startActivity(createRecipeActivity) //TODO: Return login
         }
         this.registerButton.setOnClickListener {
             startActivity(createRecipeTitleImageActivity) //TODO: Return register
